@@ -1,122 +1,74 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+// 1. IMPORTAMOS LA MEMORIA: React necesita 'useState' para recordar datos que cambian
+import { useState } from 'react';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+  
+  // ==========================================
+  // 🧠 ZONA DE MEMORIA (ESTADOS)
+  // ==========================================
+  
+  // Memoria 1: Lo que el usuario escribe en el input AHORA MISMO.
+  // Empieza como un texto vacío "".
+  const [textoInput, setTextoInput] = useState("");
+  
+  // Memoria 2: La lista oficial de tareas guardadas.
+  // Empieza como un Array vacío [].
+  const [listaTareas, setListaTareas] = useState([]);
 
+
+  // ==========================================
+  // ⚙️ ZONA DE LÓGICA (ACCIONES)
+  // ==========================================
+  
+  // Esta función se dispara cuando hacemos clic en el botón
+  const manejarClick = () => {
+    // Seguridad: Si el input está vacío o solo tiene espacios, no hacemos nada
+    if (textoInput.trim() === "") return;
+
+    // MAGIA REACT: Cogemos la lista vieja (...listaTareas) y le pegamos el texto nuevo al final
+    setListaTareas([...listaTareas, textoInput]);
+
+    // Limpiamos el input dejándolo vacío para la siguiente tarea
+    setTextoInput(""); 
+  };
+
+
+  // ==========================================
+  // 🎨 ZONA VISUAL (LO QUE VE EL USUARIO)
+  // ==========================================
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <main className="contenedor-app">
+      <h1>Entrenamiento: La Memoria</h1>
+      
+      {/* --- ZONA DE ENTRADA DE DATOS --- */}
+      <div className="caja-formulario">
+        <input 
+          type="text" 
+          placeholder="Escribe una tarea..."
+          value={textoInput} // Conectamos el input a la Memoria 1
+          onChange={(e) => setTextoInput(e.target.value)} // Cada pulsación de tecla actualiza la memoria
+        />
+        <button onClick={manejarClick}>Añadir Tarea</button>
+      </div>
 
-      <div className="ticks"></div>
+      {/* --- ZONA DE SALIDA (LA IMPRESORA) --- */}
+      <ul className="caja-lista">
+        {/* Si la lista está vacía, mostramos un mensaje amistoso */}
+        {listaTareas.length === 0 ? (
+          <p className="mensaje-vacio">No hay tareas. ¡Añade una!</p>
+        ) : (
+          // Usamos .map() para fabricar un <li> por cada tarea guardada en el Array
+          listaTareas.map((tarea, indice) => (
+            <li key={indice} className="tarea-item">
+              {tarea}
+            </li>
+          ))
+        )}
+      </ul>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    </main>
+  );
 }
 
-export default App
+export default App;
